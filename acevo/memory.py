@@ -88,7 +88,7 @@ class ACEvoSharedMemory:
             if error == 2:
                 message = "The Assetto Corsa Evo shared memory is unavailable. Start a driving session."
                 raise FileNotFoundError(message)
-            raise ctypes.WinError(ctypes.get_last_error())
+            raise ctypes.WinError(error)
 
         self._resources.callback(_kernel32.CloseHandle, handle)
         address = _kernel32.MapViewOfFile(handle, 4, 0, 0, ctypes.sizeof(page_type))
