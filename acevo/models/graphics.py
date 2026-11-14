@@ -12,33 +12,11 @@ from ctypes import (
     c_uint64,
     c_uint8,
 )
-from collections.abc import Sequence
-
-
-FloatArray = Sequence[float]
-FloatMatrix = Sequence[FloatArray]
 
 
 class TyreState(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    slip: float
-    lock: bool
-    tyre_pressure: float
-    tyre_temperature_c: float
-    brake_temperature_c: float
-    brake_pressure: float
-    tyre_temperature_left: float
-    tyre_temperature_center: float
-    tyre_temperature_right: float
-    tyre_compound_front: bytes
-    tyre_compound_rear: bytes
-    tyre_normalized_pressure: float
-    tyre_normalized_temperature_left: float
-    tyre_normalized_temperature_center: float
-    tyre_normalized_temperature_right: float
-    brake_normalized_temperature: float
-    tyre_normalized_temperature_core: float
     _fields_ = [
         ("slip", c_float),
         ("lock", c_bool),
@@ -64,15 +42,6 @@ class TyreState(LittleEndianStructure):
 class DamageState(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    damage_front: float
-    damage_rear: float
-    damage_left: float
-    damage_right: float
-    damage_center: float
-    damage_suspension_lf: float
-    damage_suspension_rf: float
-    damage_suspension_lr: float
-    damage_suspension_rr: float
     _fields_ = [
         ("damage_front", c_float),
         ("damage_rear", c_float),
@@ -90,12 +59,6 @@ class DamageState(LittleEndianStructure):
 class PitInfo(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    damage: int
-    fuel: int
-    tyres_lf: int
-    tyres_rf: int
-    tyres_lr: int
-    tyres_rr: int
     _fields_ = [
         ("damage", c_int8),
         ("fuel", c_int8),
@@ -110,28 +73,6 @@ class PitInfo(LittleEndianStructure):
 class Electronics(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    tc_level: int
-    tc_cut_level: int
-    abs_level: int
-    esc_level: int
-    ebb_level: int
-    brake_bias: float
-    engine_map_level: int
-    turbo_level: float
-    ers_deployment_map: int
-    ers_recharge_map: float
-    is_ers_heat_charging_on: bool
-    is_ers_overtake_mode_on: bool
-    is_drs_open: bool
-    diff_power_level: int
-    diff_coast_level: int
-    front_bump_damper_level: int
-    front_rebound_damper_level: int
-    rear_bump_damper_level: int
-    rear_rebound_damper_level: int
-    is_ignition_on: bool
-    is_pit_limiter_on: bool
-    active_performance_mode: int
     _fields_ = [
         ("tc_level", c_int8),
         ("tc_cut_level", c_int8),
@@ -162,18 +103,6 @@ class Electronics(LittleEndianStructure):
 class Instrumentation(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    main_light_stage: int
-    special_light_stage: int
-    cockpit_light_stage: int
-    wiper_level: int
-    rain_lights: bool
-    direction_light_left: bool
-    direction_light_right: bool
-    flashing_lights: bool
-    warning_lights: bool
-    selected_display_index: int
-    display_current_page_index: Sequence[int]
-    are_headlights_visible: bool
     _fields_ = [
         ("main_light_stage", c_int8),
         ("special_light_stage", c_int8),
@@ -194,23 +123,6 @@ class Instrumentation(LittleEndianStructure):
 class SessionState(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    phase_name: bytes
-    time_left: bytes
-    time_left_ms: int
-    wait_time: bytes
-    total_laps: int
-    current_lap: int
-    lights_on: int
-    lights_mode: int
-    lap_length_km: float
-    end_session_flag: int
-    time_to_next_session: bytes
-    disconnected_from_server: bool
-    restart_season_enabled: bool
-    ui_enable_drive: bool
-    ui_enable_setup: bool
-    is_ready_to_next_blinking: bool
-    show_waiting_for_players: bool
     _fields_ = [
         ("phase_name", (c_char * 33)),
         ("time_left", (c_char * 15)),
@@ -236,16 +148,6 @@ class SessionState(LittleEndianStructure):
 class TimingState(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    current_lap_time: bytes
-    delta_current: bytes
-    delta_current_p: int
-    last_lap_time: bytes
-    delta_last: bytes
-    delta_last_p: int
-    best_lap_time: bytes
-    ideal_lap_time: bytes
-    total_time: bytes
-    is_invalid: bool
     _fields_ = [
         ("current_lap_time", (c_char * 15)),
         ("delta_current", (c_char * 15)),
@@ -264,15 +166,6 @@ class TimingState(LittleEndianStructure):
 class AssistsState(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-    auto_gear: int
-    auto_blip: int
-    auto_clutch: int
-    auto_clutch_on_start: int
-    manual_ignition_e_start: int
-    auto_pit_limiter: int
-    standing_start_assist: int
-    auto_steer: float
-    arcade_stability_control: float
     _fields_ = [
         ("auto_gear", c_uint8),
         ("auto_blip", c_uint8),
@@ -290,142 +183,6 @@ class AssistsState(LittleEndianStructure):
 class GraphicsPage(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-
-    packet_id: int
-    status: int
-    focused_car_id_a: int
-    focused_car_id_b: int
-    player_car_id_a: int
-    player_car_id_b: int
-    rpm: int
-    is_rpm_limiter_on: bool
-    is_change_up_rpm: bool
-    is_change_down_rpm: bool
-    tc_active: bool
-    abs_active: bool
-    esc_active: bool
-    launch_active: bool
-    is_ignition_on: bool
-    is_engine_running: bool
-    kers_is_charging: bool
-    is_wrong_way: bool
-    is_drs_available: bool
-    battery_is_charging: bool
-    is_max_kj_per_lap_reached: bool
-    is_max_charge_kj_per_lap_reached: bool
-    display_speed_kmh: int
-    display_speed_mph: int
-    display_speed_ms: int
-    pit_speeding_delta: float
-    gear_int: int
-    rpm_percent: float
-    gas_percent: float
-    brake_percent: float
-    handbrake_percent: float
-    clutch_percent: float
-    steering_percent: float
-    ffb_strength: float
-    car_ffb_multiplier: float
-    water_temperature_percent: float
-    water_pressure_bar: float
-    fuel_pressure_bar: float
-    water_temperature_c: int
-    air_temperature_c: int
-    oil_temperature_c: float
-    oil_pressure_bar: float
-    exhaust_temperature_c: float
-    g_forces_x: float
-    g_forces_y: float
-    g_forces_z: float
-    turbo_boost: float
-    turbo_boost_level: float
-    turbo_boost_perc: float
-    steer_degrees: int
-    current_km: float
-    total_km: int
-    total_driving_time_s: int
-    time_of_day_hours: int
-    time_of_day_minutes: int
-    time_of_day_seconds: int
-    delta_time_ms: int
-    current_lap_time_ms: int
-    predicted_lap_time_ms: int
-    fuel_liter_current_quantity: float
-    fuel_liter_current_quantity_percent: float
-    fuel_liter_per_km: float
-    km_per_fuel_liter: float
-    current_torque: float
-    current_bhp: int
-    tyre_lf: TyreState
-    tyre_rf: TyreState
-    tyre_lr: TyreState
-    tyre_rr: TyreState
-    npos: float
-    kers_charge_perc: float
-    kers_current_perc: float
-    control_lock_time: float
-    car_damage: DamageState
-    car_location: int
-    pit_info: PitInfo
-    fuel_liter_used: float
-    fuel_liter_per_lap: float
-    laps_possible_with_fuel: float
-    battery_temperature: float
-    battery_voltage: float
-    instantaneous_fuel_liter_per_km: float
-    instantaneous_km_per_fuel_liter: float
-    gear_rpm_window: float
-    instrumentation: Instrumentation
-    instrumentation_min_limit: Instrumentation
-    instrumentation_max_limit: Instrumentation
-    electronics: Electronics
-    electronics_min_limit: Electronics
-    electronics_max_limit: Electronics
-    electronics_is_modifiable: Electronics
-    total_lap_count: int
-    current_pos: int
-    total_drivers: int
-    last_lap_time_ms: int
-    best_lap_time_ms: int
-    flag: int
-    global_flag: int
-    max_gears: int
-    engine_type: int
-    has_kers: bool
-    is_last_lap: bool
-    performance_mode_name: bytes
-    diff_coast_raw_value: float
-    diff_power_raw_value: float
-    race_cut_gained_time_ms: int
-    distance_to_deadline: int
-    race_cut_current_delta: float
-    session_state: SessionState
-    timing_state: TimingState
-    player_ping: int
-    player_latency: int
-    player_cpu_usage: int
-    player_cpu_usage_avg: int
-    player_qos: int
-    player_qos_avg: int
-    player_fps: int
-    player_fps_avg: int
-    driver_name: bytes
-    driver_surname: bytes
-    car_model: bytes
-    is_in_pit_box: bool
-    is_in_pit_lane: bool
-    is_valid_lap: bool
-    car_coordinates: FloatMatrix
-    gap_ahead: float
-    gap_behind: float
-    active_cars: int
-    fuel_per_lap: float
-    fuel_estimated_laps: float
-    assists_state: AssistsState
-    max_fuel: float
-    max_turbo_boost: float
-    use_single_compound: bool
-    car_ids: Sequence[Sequence[int]]
 
     _fields_ = [
         ("packet_id", c_int32),

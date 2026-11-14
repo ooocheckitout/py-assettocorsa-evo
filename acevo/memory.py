@@ -1,16 +1,11 @@
-from __future__ import annotations
-
 import ctypes
+from collections import namedtuple
 from contextlib import ExitStack
 from ctypes import wintypes
-from types import TracebackType
-from typing import NamedTuple, TypeVar
 
 from .models.graphics import GraphicsPage
 from .models.physics import PhysicsPage
 from .models.static import StaticPage
-
-Page = TypeVar("Page", bound=ctypes.Structure)
 
 _kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
 _kernel32.OpenFileMappingW.argtypes = (
@@ -33,20 +28,17 @@ _kernel32.CloseHandle.argtypes = (wintypes.HANDLE,)
 _kernel32.CloseHandle.restype = wintypes.BOOL
 
 
-class Snapshot(NamedTuple):
-    static: StaticPage
-    physics: PhysicsPage
-    graphics: GraphicsPage
+Snapshot = namedtuple("Snapshot", ["static", "physics", "graphics"])
 
 
 class ACEvoSharedMemory:
     """Keep EVO shared memory open inside a with block and return copied snapshots."""
 
-    def __init__(self) -> None:
+    def __init__(self):
         self._resources = ExitStack()
-        self._pages: dict[type[ctypes.Structure], int] = {}
+        self._pages = {}
 
-    def __enter__(self) -> ACEvoSharedMemory:
+    def __enter__(self):
         if self._pages:
             raise RuntimeError("Close the reader first.")
         try:
@@ -61,40 +53,35 @@ class ACEvoSharedMemory:
             raise
         return self
 
-    def __exit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_value: BaseException | None,
-        traceback: TracebackType | None,
-    ) -> None:
+    def __exit__(self, exc_type, exc_value, traceback):
         self._close()
 
-    def _close(self) -> None:
+    def _close(self):
         self._pages.clear()
         self._resources.close()
 
-    def read_static(self) -> StaticPage:
+    def read_static(self):
         """Return snapshot of a static page. Updates when a new session loads."""
         return self._read_page(StaticPage)
 
-    def read_physics(self) -> PhysicsPage:
+    def read_physics(self):
         """Return snapshot of a physics page. Updates every simulation step."""
         return self._read_page(PhysicsPage)
 
-    def read_graphics(self) -> GraphicsPage:
+    def read_graphics(self):
         """Return snapshot of a graphics page. Updates every rendered frame."""
         return self._read_page(GraphicsPage)
 
-    def read_snapshot(self) -> Snapshot:
+    def read_snapshot(self):
         """Return snapshot of all pages."""
         return Snapshot(self.read_static(), self.read_physics(), self.read_graphics())
 
-    def _read_page(self, page_type: type[Page]) -> Page:
+    def _read_page(self, page_type):
         return page_type.from_buffer_copy(
             ctypes.string_at(self._pages[page_type], ctypes.sizeof(page_type))
         )
 
-    def _open_page(self, name: str, page_type: type[Page]) -> int:
+    def _open_page(self, name, page_type):
         handle = _kernel32.OpenFileMappingW(4, False, name)
         if not handle:
             error = ctypes.get_last_error()

@@ -4,102 +4,11 @@ from ctypes import (
     c_float,
     c_int32,
 )
-from collections.abc import Sequence
-
-
-FloatArray = Sequence[float]
-FloatMatrix = Sequence[FloatArray]
 
 
 class PhysicsPage(LittleEndianStructure):
     _layout_ = "ms"
     _pack_ = 4
-
-    packet_id: int
-    gas: float
-    brake: float
-    fuel: float
-    gear: int
-    rpms: int
-    steer_angle: float
-    speed_kmh: float
-    velocity: FloatArray
-    acc_g: FloatArray
-    wheel_slip: FloatArray
-    wheel_load: FloatArray
-    wheel_pressure: FloatArray
-    wheel_angular_speed: FloatArray
-    tyre_wear: FloatArray
-    tyre_dirt_level: FloatArray
-    tyre_core_temperature: FloatArray
-    camber_rad: FloatArray
-    suspension_travel: FloatArray
-    drs: float
-    tc: float
-    heading: float
-    pitch: float
-    roll: float
-    cg_height: float
-    car_damage: FloatArray
-    number_of_tyres_out: int
-    pit_limiter_on: int
-    abs: float
-    kers_charge: float
-    kers_input: float
-    auto_shifter_on: int
-    ride_height: FloatArray
-    turbo_boost: float
-    ballast: float
-    air_density: float
-    air_temp: float
-    road_temp: float
-    local_angular_vel: FloatArray
-    final_ff: float
-    performance_meter: float
-    engine_brake: int
-    ers_recovery_level: int
-    ers_power_level: int
-    ers_heat_charging: int
-    ers_is_charging: int
-    kers_current_kj: float
-    drs_available: int
-    drs_enabled: int
-    brake_temp: FloatArray
-    clutch: float
-    tyre_temp_i: FloatArray
-    tyre_temp_m: FloatArray
-    tyre_temp_o: FloatArray
-    is_ai_controlled: int
-    tyre_contact_point: FloatMatrix
-    tyre_contact_normal: FloatMatrix
-    tyre_contact_heading: FloatMatrix
-    brake_bias: float
-    local_velocity: FloatArray
-    p2p_activations: int
-    p2p_status: int
-    current_max_rpm: int
-    mz: FloatArray
-    fx: FloatArray
-    fy: FloatArray
-    slip_ratio: FloatArray
-    slip_angle: FloatArray
-    tc_in_action: int
-    abs_in_action: int
-    suspension_damage: FloatArray
-    tyre_temp: FloatArray
-    water_temp: float
-    brake_torque: FloatArray
-    front_brake_compound: int
-    rear_brake_compound: int
-    pad_life: FloatArray
-    disc_life: FloatArray
-    ignition_on: int
-    starter_engine_on: int
-    is_engine_running: int
-    kerb_vibration: float
-    slip_vibrations: float
-    road_vibrations: float
-    abs_vibrations: float
 
     _fields_ = [
         ("packet_id", c_int32),
